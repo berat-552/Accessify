@@ -1,0 +1,30 @@
+.qodo
+
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+# Mac system files
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Reports (optional — comment out if you want to keep them in git)
+*.pdf
+
+# Temporary files
+*.tmp
+*.swp
+
+# Runtime output
+dist/
+build/
+
+# dotenv (if using env vars later)
+.env
