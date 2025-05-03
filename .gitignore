@@ -15,7 +15,7 @@ logs
 *.log
 npm-debug.log*
 
-# Reports (optional — comment out if you want to keep them in git)
+# Reports
 *.pdf
 
 # Temporary files
@@ -26,5 +26,5 @@ npm-debug.log*
 dist/
 build/
 
-# dotenv (if using env vars later)
+# dotenv
 .env
