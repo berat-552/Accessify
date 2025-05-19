@@ -42,7 +42,7 @@ Use this flag to run automated accessibility checks inside CI/CD pipelines (e.g.
 
 🧪 Ideal for catching problems before production deployment
 
-You can integrate this step into any .yml workflow file to ensure accessibility is checked on every push or pull request.
+You can integrate this step into any `.yml` workflow file to ensure accessibility is checked on every push or pull request.
 
 
 ## 📦 Installation (Local Dev)
