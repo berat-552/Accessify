@@ -8,16 +8,55 @@ import { createRequire } from "module";
 import { saveResultsAsPdf } from "./saveResultsAsPdf.js";
 import inquirer from "inquirer";
 import ora from "ora";
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
+import he from "he";
 
 const require = createRequire(import.meta.url);
 
 // ---------- Parse Args ----------
-const args = process.argv.slice(2);
-const isCI = args.includes("--ci");
-const filteredArgs = args.filter((arg) => arg !== "--ci");
+const argumentsProvided = process.argv.slice(2);
+
+if (argumentsProvided.includes("--help")) {
+  // Dynamically list available languages from /locales/*.json
+  const localeFiles = fs.readdirSync("./locales");
+  const availableLangs = localeFiles
+    .filter((file) => file.endsWith(".json"))
+    .map((file) => path.basename(file, ".json"))
+    .join(", ");
+
+  console.log(`
+Usage: checkaccess [options] <url | file.txt>
+
+Options:
+  --help         Show this help message
+  --ci           Run in CI mode (no prompts, auto-save PDF)
+  --lang=<code>  Set language (available: ${availableLangs})
+
+Examples:
+  checkaccess https://example.com
+  checkaccess urls.txt --ci --lang=fr
+`);
+  process.exit(0);
+}
+
+const isCI = argumentsProvided.includes("--ci");
+const filteredArgs = argumentsProvided.filter((arg) => !arg.startsWith("--"));
+
+const langArg = argumentsProvided.find((arg) => arg.startsWith("--lang="));
+const languageCode = langArg ? langArg.split("=")[1] : "en";
+const translateUsing = i18next.t;
+
+await i18next.use(Backend).init({
+  lng: languageCode,
+  fallbackLng: "en",
+  backend: {
+    loadPath: "./locales/{{lng}}.json",
+  },
+});
 
 if (filteredArgs.length === 0) {
-  console.error("❌ Please provide one or more URLs or a .txt file.");
+  console.error(translateUsing("provideUrls"));
   process.exit(1);
 }
 
@@ -34,15 +73,17 @@ if (filteredArgs.length === 1 && fs.existsSync(filteredArgs[0])) {
 }
 
 // ---------- Audit Logic ----------
-async function runAudit(url) {
+async function auditAccessibilityOf(url) {
   const formattedUrl = url.startsWith("http")
     ? new URL(url)
     : new URL(`http://${url}`);
   const hostname = formattedUrl.hostname.replace(/^www\./, "").split(".")[0];
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-  const defaultFilename = `${hostname}-report-${timestamp}.pdf`;
+  const suggestedFilename = `${hostname}-report-${timestamp}.pdf`;
 
-  const spinner = ora(`🔄 Auditing ${formattedUrl.href}`).start();
+  const loadingSpinner = ora(
+    he.decode(translateUsing("auditing", { url: formattedUrl.href }))
+  ).start();
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -54,26 +95,32 @@ async function runAudit(url) {
       timeout: 15000,
     });
   } catch (err) {
-    spinner.fail(`❌ Failed to load ${url}: ${err.message}`);
+    loadingSpinner.fail(
+      he.decode(translateUsing("failToLoad", { url, error: err.message }))
+    );
     await browser.close();
     return { url, issues: [], error: err.message };
   }
 
   if (!response || !response.ok()) {
-    spinner.fail(`❌ ${url} returned status: ${response?.status() || "Unknown"}`);
+    loadingSpinner.fail(
+      translateUsing(
+        he.decode("badResponse", { url, code: response?.status() || "Unknown" })
+      )
+    );
     await browser.close();
     return { url, issues: [], error: `Bad response: ${response?.status()}` };
   }
 
   const axeSource = fs.readFileSync(require.resolve("axe-core/axe.min.js"), "utf8");
   await page.evaluate(axeSource);
-  const results = await page.evaluate(async () => await axe.run());
+  const auditResults = await page.evaluate(async () => await axe.run());
 
   await browser.close();
-  spinner.succeed(`✅ Finished audit for ${url}`);
+  loadingSpinner.succeed(he.decode(translateUsing("finishedAudit", { url })));
 
-  const issues = results.violations;
-  return { url, issues, formattedUrl, defaultFilename };
+  const issues = auditResults.violations;
+  return { url, issues, formattedUrl, suggestedFilename: suggestedFilename };
 }
 
 // ---------- Run All Audits ----------
@@ -85,19 +132,25 @@ async function runAudit(url) {
       url: scannedUrl,
       issues,
       formattedUrl,
-      defaultFilename,
+      suggestedFilename,
       error,
-    } = await runAudit(url);
+    } = await auditAccessibilityOf(url);
 
     if (error) {
-      console.error(chalk.red(`⚠ Error for ${scannedUrl}: ${error}`));
+      console.error(
+        chalk.red(he.decode(translateUsing("errorFor", { url: scannedUrl, error })))
+      );
       hasFailures = true;
       continue;
     }
 
-    console.log(chalk.blue(`\n🔎 Results for ${scannedUrl}:\n`));
+    console.log(
+      chalk.blue(
+        `\n${he.decode(translateUsing("resultHeader", { url: scannedUrl }))}\n`
+      )
+    );
     if (issues.length === 0) {
-      console.log(chalk.green("✅ No accessibility violations found!\n"));
+      console.log(chalk.green(translateUsing("noViolations") + "\n"));
       continue;
     }
 
@@ -124,7 +177,7 @@ async function runAudit(url) {
       console.log("");
     });
 
-    console.log(chalk.gray("📊 Summary by severity:"));
+    console.log(chalk.gray(translateUsing("summary")));
     for (const [severity, count] of Object.entries(severityCount)) {
       console.log(`  ${severity}: ${count}`);
     }
@@ -134,14 +187,14 @@ async function runAudit(url) {
     // ----- Handle PDF Saving -----
     if (isCI) {
       const filename = `${formattedUrl.hostname.replace(/^www\./, "")}-report.pdf`;
-      saveResultsAsPdf(issues, formattedUrl.href, filename);
-      console.log(chalk.green(`📄 PDF saved to: ${filename}\n`));
+      saveResultsAsPdf(issues, formattedUrl.href, filename, translateUsing);
+      console.log(chalk.green(translateUsing("pdfSaved", { filename }) + "\n"));
     } else {
       const { savePdf } = await inquirer.prompt([
         {
           type: "confirm",
           name: "savePdf",
-          message: "Save PDF report?",
+          message: translateUsing("savePdf"),
           default: true,
         },
       ]);
@@ -151,8 +204,8 @@ async function runAudit(url) {
           {
             type: "input",
             name: "rawFilename",
-            message: "Enter output filename:",
-            default: defaultFilename,
+            message: translateUsing("outputFilename"),
+            default: suggestedFilename,
           },
         ]);
 
@@ -162,9 +215,9 @@ async function runAudit(url) {
 
         fs.mkdirSync(path.dirname(filename), { recursive: true });
 
-        const pdfSpinner = ora("📄 Generating PDF...").start();
-        saveResultsAsPdf(issues, formattedUrl.href, filename);
-        pdfSpinner.succeed(`✅ PDF saved to: ${filename}`);
+        const pdfSpinner = ora(translateUsing("generatingPdf")).start();
+        saveResultsAsPdf(issues, formattedUrl.href, filename, translateUsing);
+        pdfSpinner.succeed(translateUsing("pdfSaved", { filename }));
       }
     }
   }

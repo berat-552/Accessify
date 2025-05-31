@@ -1,13 +1,12 @@
 {
-  "name": "accessibility-checker-tool",
+  "name": "accessify",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "accessibility-checker-tool": "./index.js"
+    "accessify": "./src/cli.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +15,9 @@
   "dependencies": {
     "axe-core": "^4.10.3",
     "chalk": "^5.4.1",
+    "he": "^1.2.0",
+    "i18next": "^25.2.1",
+    "i18next-fs-backend": "^2.6.0",
     "inquirer": "^12.6.0",
     "ora": "^8.2.0",
     "pdfkit": "^0.17.1",

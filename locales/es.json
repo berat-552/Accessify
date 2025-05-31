@@ -1,0 +1,23 @@
+{
+  "provideUrls": "❌ Proporcione una o más URL o un archivo .txt.",
+  "auditing": "🔄 Auditando {{url}}",
+  "failToLoad": "❌ Error al cargar {{url}}: {{error}}",
+  "finishedAudit": "✅ Auditoría finalizada para {{url}}",
+  "noViolations": "✅ ¡No se encontraron violaciones de accesibilidad!",
+  "errorFor": "⚠ Error para {{url}}: {{error}}",
+  "resultHeader": "🔎 Resultados para \"{{url}}\":",
+  "summary": "📊 Resumen por gravedad:",
+  "savePdf": "¿Guardar informe en PDF?",
+  "outputFilename": "Ingrese el nombre del archivo de salida:",
+  "pdfSaved": "📄 PDF guardado en: {{filename}}",
+  "generatingPdf": "📄 Generando PDF...",
+  "pdfTitle": "Informe de Auditoría de Accesibilidad",
+  "pdfGenerated": "Generado",
+  "pdfUrl": "URL",
+  "pdfNoIssues": "✅ No se encontraron problemas de accesibilidad.",
+  "pdfFoundIssues": "{{count}} problemas de accesibilidad encontrados:",
+  "pdfImpact": "Gravedad",
+  "pdfHelp": "Ayuda",
+  "pdfTags": "Etiquetas",
+  "pdfFooterNote": "Generado por Accessify CLI"
+}

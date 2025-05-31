@@ -1,0 +1,23 @@
+{
+  "provideUrls": "❌ Bitte geben Sie eine oder mehrere URLs oder eine .txt-Datei an.",
+  "auditing": "🔄 Prüfe {{url}}",
+  "failToLoad": "❌ Fehler beim Laden von {{url}}: {{error}}",
+  "finishedAudit": "✅ Prüfung abgeschlossen für {{url}}",
+  "noViolations": "✅ Keine Barrierefreiheitsverstöße gefunden!",
+  "errorFor": "⚠ Fehler bei {{url}}: {{error}}",
+  "resultHeader": "🔎 Ergebnisse für \"{{url}}\":",
+  "summary": "📊 Zusammenfassung nach Schweregrad:",
+  "savePdf": "PDF-Bericht speichern?",
+  "outputFilename": "Name der Ausgabedatei eingeben:",
+  "pdfSaved": "📄 PDF gespeichert unter: {{filename}}",
+  "generatingPdf": "📄 PDF wird generiert...",
+  "pdfTitle": "Barrierefreiheits-Auditbericht",
+  "pdfGenerated": "Erstellt am",
+  "pdfUrl": "URL",
+  "pdfNoIssues": "✅ Keine Barrierefreiheitsprobleme gefunden.",
+  "pdfFoundIssues": "{{count}} Barrierefreiheitsprobleme gefunden:",
+  "pdfImpact": "Schweregrad",
+  "pdfHelp": "Hilfe",
+  "pdfTags": "Tags",
+  "pdfFooterNote": "Erstellt von Accessify CLI"
+}

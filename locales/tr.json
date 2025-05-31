@@ -1,0 +1,23 @@
+{
+  "provideUrls": "❌ Lütfen bir veya daha fazla URL ya da bir .txt dosyası sağlayın.",
+  "auditing": "🔄 Denetleniyor: {{url}}",
+  "failToLoad": "❌ {{url}} yüklenemedi: {{error}}",
+  "finishedAudit": "✅ Denetim tamamlandı: {{url}}",
+  "noViolations": "✅ Herhangi bir erişilebilirlik ihlali bulunamadı!",
+  "errorFor": "⚠ {{url}} için hata: {{error}}",
+  "resultHeader": "🔎 \"{{url}}\" için sonuçlar:",
+  "summary": "📊 Ciddiyet seviyesine göre özet:",
+  "savePdf": "PDF raporunu kaydetmek ister misiniz?",
+  "outputFilename": "Çıktı dosya adını girin:",
+  "pdfSaved": "📄 PDF kaydedildi: {{filename}}",
+  "generatingPdf": "📄 PDF oluşturuluyor...",
+  "pdfTitle": "Erişilebilirlik Denetim Raporu",
+  "pdfGenerated": "Oluşturulma tarihi",
+  "pdfUrl": "URL",
+  "pdfNoIssues": "✅ Herhangi bir erişilebilirlik sorunu bulunamadı.",
+  "pdfFoundIssues": "{{count}} erişilebilirlik sorunu bulundu:",
+  "pdfImpact": "Ciddiyet",
+  "pdfHelp": "Yardım",
+  "pdfTags": "Etiketler",
+  "pdfFooterNote": "Accessify CLI tarafından oluşturuldu"
+}
