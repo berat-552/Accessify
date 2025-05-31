@@ -1,6 +1,6 @@
 # Accessify ♿🧪
 
-A lightweight, developer-friendly command-line tool that audits any webpage for accessibility issues using Puppeteer and axe-core. Generates a styled terminal report and optionally exports a PDF summary with severity-based color coding.
+A lightweight, developer-friendly command-line tool that audits any public webpage for accessibility issues using **Puppeteer** and **axe-core**. Supports both **local use** and **CI/CD pipelines**, and can export clean, shareable PDF reports.
 
 ---
 
