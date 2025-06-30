@@ -61,7 +61,7 @@ Accessify supports localization using the `--lang=<code>` flag. Languages includ
 - Spanish (es)
   Example Output PDF:
 
-![Example Accessibility Report](./Example-Accessibility-Report.png)
+![Example Accessibility Report](./Example-Report.png)
 
 ## 🛠 Flags
 
